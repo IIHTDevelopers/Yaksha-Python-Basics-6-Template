@@ -2,6 +2,7 @@ from test.TestResults import TestResults
 from test.TestCaseResultDto import TestCaseResultDto
 import json
 import requests
+import os
 
 class TestUtils:
     GUID = "dc66f3c1-630f-40ab-8314-f7bb9ffcb71f"
