@@ -1,70 +1,45 @@
-# loan_management.py
-
 import numpy as np
 
-# Loan ID, Principal Amount, Interest Rate (%), Tenure (Years)
+# Dataset: [Customer ID, Name, Loan Amount, Interest Rate %, Tenure in Years]
 loan_data = np.array([
-    [101, 5000, 5, 2],
-    [102, 10000, 4, 5],
-    [103, 7500, 6, 3],
-    [104, 12000, 3, 4],
-    [105, 3000, 7, 1]
-])
+    [101, 'Alice', 5000, 5, 2],
+    [102, 'Bob', 10000, 4.5, 5],
+    [103, 'Charlie', 3000, 6, 1],
+    [104, 'Diana', 8000, 3.5, 4],
+    [105, 'Ethan', 4500, 5.2, 3]
+], dtype=object)
 
-# Function to calculate total repayment amount
-def calculate_total_amount(principal, rate, tenure):
+# 1️⃣ TODO: Calculate the total loan amount taken by all customers
+def calculate_total_loan(data):
     """
-    Calculate the total repayment amount for a loan using the formula:
-    total_amount = principal + (principal * rate / 100) * tenure
-
     Args:
-        principal (float): The principal amount of the loan.
-        rate (float): The interest rate as a percentage.
-        tenure (int): The tenure of the loan in years.
+        data (np.ndarray): 2D array with loan records
 
     Returns:
-        float: The total repayment amount.
+        float: Sum of all loan amounts
     """
-    # TODO: Implement the calculation logic
+    # TODO: Extract and sum up all loan amounts (column index 2)
     pass
 
-# Function to display loan details and total repayment amounts
-def display_loans(loan_data):
+# 2️⃣ TODO: Find the customer with the least repayment years
+def find_least_tenure(data):
     """
-    Display the loan details and total repayment amounts for each loan.
-
     Args:
-        loan_data (np.array): A NumPy array containing loan details.
+        data (np.ndarray): 2D array with loan records
 
     Returns:
-        list: A list of strings containing loan information.
+        list: The record of the customer with the shortest loan tenure
     """
-    # TODO: Implement logic to display loan details
+    # TODO: Use min() with key on tenure (column index 4)
     pass
 
-# Function to find the loan with the highest total repayment amount
-def find_highest_repayment(loan_data):
-    """
-    Find the loan with the highest total repayment amount.
+# 🔍 Sample usage (keep this unchanged)
+def main():
+    total_loan = calculate_total_loan(loan_data)
+    print(f"Total Loan Amount Taken by All Customers: ${total_loan}")
 
-    Args:
-        loan_data (np.array): A NumPy array containing loan details.
+    fastest = find_least_tenure(loan_data)
+    print(f"Customer with Shortest Repayment Period: {fastest[1]} ({fastest[4]} years)")
 
-    Returns:
-        np.array: The loan with the highest total repayment amount.
-    """
-    # TODO: Implement logic to find the loan with the highest repayment
-    pass
-
-# Main function to process loans
-def process_loans():
-    """
-    Main function to execute the loan processing system.
-    """
-    print("Loan Management System")
-    # TODO: Call display_loans() and find_highest_repayment() functions
-    pass
-
-# Execute the loan management system if this script is run directly
-if __name__ == '__main__':
-    process_loans()
+if __name__ == "__main__":
+    main()
