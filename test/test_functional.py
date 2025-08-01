@@ -1,260 +1,148 @@
-# test_recipe_management.py
-
 import unittest
-from io import StringIO
-import sys
-import os
-import pandas as pd
-
-# Add the parent directory to the Python path more explicitly
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
-
-# Importing functions from the recipe_management module
-from recipe import calculate_total_cost, normalize_quantities, unique_ingredients
-from test.TestUtils import TestUtils
-
-class TestRecipeManagement(unittest.TestCase):
-
-    def setUp(self):
-        # Initialize TestUtils object for yaksha assertions
-        self.test_obj = TestUtils()
-
-    def test_calculate_total_cost(self):
-        """
-        Test for calculate_total_cost function
-        """
-        try:
-            expected_costs = {
-                "Pasta": 310,
-                "Pizza": 725,
-                "Salad": 645,
-                "Soup": 420,
-                "Cake": 800
-            }
-            result = calculate_total_cost()
-            if result == expected_costs:
-                self.test_obj.yakshaAssert("TestCalculateTotalCost", True, "functional")
-                print("TestCalculateTotalCost = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestCalculateTotalCost", False, "functional")
-                print("TestCalculateTotalCost = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestCalculateTotalCost", False, "exception")
-            print(f"TestCalculateTotalCost = Failed ")
-
-    def test_normalize_quantities(self):
-        """
-        Test for normalize_quantities function
-        """
-        try:
-            # Expected scaled DataFrame
-            df_original = pd.DataFrame({
-                "Pasta": {"Flour": 200, "Eggs": 2, "Cheese": 50, "Milk": 100},
-                "Pizza": {"Flour": 250, "Tomato": 100, "Cheese": 150, "Olives": 50},
-                "Salad": {"Lettuce": 100, "Tomato": 150, "Cucumber": 100, "Cheese": 50},
-                "Soup": {"Carrot": 200, "Potato": 150, "Onion": 100, "Garlic": 20},
-                "Cake": {"Flour": 300, "Sugar": 200, "Butter": 150, "Eggs": 3}
-            }).fillna(0)
-
-            expected_scaled_df = df_original * 1.5
-            result = normalize_quantities()
-            if result.equals(expected_scaled_df):
-                self.test_obj.yakshaAssert("TestNormalizeQuantities", True, "functional")
-                print("TestNormalizeQuantities = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestNormalizeQuantities", False, "functional")
-                print("TestNormalizeQuantities = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestNormalizeQuantities", False, "exception")
-            print(f"TestNormalizeQuantities = Failed ")
-
-    def test_unique_ingredients(self):
-        """
-        Test for unique_ingredients function
-        """
-        try:
-            expected_ingredients = {
-                "Flour", "Eggs", "Cheese", "Milk",
-                "Tomato", "Olives", "Lettuce", "Cucumber",
-                "Carrot", "Potato", "Onion", "Garlic",
-                "Sugar", "Butter"
-            }
-            result = unique_ingredients()
-            if result == expected_ingredients:
-                self.test_obj.yakshaAssert("TestUniqueIngredients", True, "functional")
-                print("TestUniqueIngredients = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestUniqueIngredients", False, "functional")
-                print("TestUniqueIngredients = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestUniqueIngredients", False, "exception")
-            print(f"TestUniqueIngredients = Failed ")
-
-
-# test_sports_score_prediction.py
-
-import unittest
-import os
-from io import StringIO
-import sys
-import pandas as pd
-
-# Importing functions from the main module
-from SportsScorePredictionSystem import predict_score, save_predictions, analyze_predictions, match_data
-
-# Yaksha TestUtils for assertion
-sys.path.append('..')
-from test.TestUtils import TestUtils
-
-
-class TestSportsScorePrediction(unittest.TestCase):
-
-    def setUp(self):
-        # Initialize TestUtils object for yaksha assertions
-        self.test_obj = TestUtils()
-        # Setup a temporary CSV file for predictions
-        self.test_filename = "test_predictions.csv"
-        # Clear the file before each test
-        if os.path.exists(self.test_filename):
-            os.remove(self.test_filename)
-
-    def test_predict_score(self):
-        """
-        Test for predict_score function
-        """
-        try:
-            # Test Cases
-            test_cases = [
-                {"prev_score": 65, "opp_strength": 70, "expected": 66},
-                {"prev_score": 80, "opp_strength": 60, "expected": 76},
-                {"prev_score": 55, "opp_strength": 75, "expected": 59},
-                {"prev_score": 90, "opp_strength": 50, "expected": 82},
-                {"prev_score": 70, "opp_strength": 65, "expected": 69}
-            ]
-
-            for case in test_cases:
-                result = predict_score(case["prev_score"], case["opp_strength"])
-                if result == case["expected"]:
-                    self.test_obj.yakshaAssert("TestPredictScore", True, "functional")
-                    print("TestPredictScore = Passed")
-                else:
-                    self.test_obj.yakshaAssert("TestPredictScore", False, "functional")
-                    print("TestPredictScore = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestPredictScore", False, "exception")
-            print(f"TestPredictScore = Failed ")
-
-    def test_save_predictions(self):
-        """
-        Test for save_predictions function
-        """
-        try:
-            predictions = save_predictions(match_data, self.test_filename)
-            # Check if file is created
-            self.assertTrue(os.path.exists(self.test_filename), "Predictions file was not created.")
-
-            # Load the file and verify content
-            df = pd.read_csv(self.test_filename)
-            if len(df) == len(match_data) and "predicted_score" in df.columns:
-                self.test_obj.yakshaAssert("TestSavePredictions", True, "functional")
-                print("TestSavePredictions = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestSavePredictions", False, "functional")
-                print("TestSavePredictions = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestSavePredictions", False, "exception")
-            print(f"TestSavePredictions = Failed ")
-
-
-    def tearDown(self):
-        # Clean up the temporary CSV file after each test
-        if os.path.exists(self.test_filename):
-            os.remove(self.test_filename)
-
-
-# test_loan_management.py
-
-import unittest
-from io import StringIO
-import sys
 import numpy as np
+from LoanManagementSystem import (
+    calculate_total_loan,
+    
+    find_least_tenure,
+    loan_data
+)
 
-# Importing functions from the main module
-from LoanManagementSystem import calculate_total_amount, display_loans, find_highest_repayment, loan_data
 
-# Yaksha TestUtils for assertion
-sys.path.append('..')
 from test.TestUtils import TestUtils
 
 class TestLoanManagement(unittest.TestCase):
 
-    def setUp(self):
-        # Initialize TestUtils object for yaksha assertions
-        self.test_obj = TestUtils()
+    @classmethod
+    def setUpClass(cls):
+        cls.test_obj = TestUtils()
+        cls.sample_data = np.array([
+            [101, 'Alice', 5000, 5, 2],
+            [102, 'Bob', 10000, 4.5, 5],
+            [103, 'Charlie', 3000, 6, 1],
+            [104, 'Diana', 8000, 3.5, 4],
+            [105, 'Ethan', 4500, 5.2, 3]
+        ], dtype=object)
 
-
-
-    def test_display_loans(self):
-        """
-        Test for display_loans function
-        """
+    def test_total_loan_amount(self):
         try:
-            # Expected Output Lines
-            expected_output = [
-                "Loan ID: 101, Principal: $5000, Interest Rate: 5%, Tenure: 2 years, Total Repayment: $5500.00",
-                "Loan ID: 102, Principal: $10000, Interest Rate: 4%, Tenure: 5 years, Total Repayment: $12000.00",
-                "Loan ID: 103, Principal: $7500, Interest Rate: 6%, Tenure: 3 years, Total Repayment: $8850.00",
-                "Loan ID: 104, Principal: $12000, Interest Rate: 3%, Tenure: 4 years, Total Repayment: $13440.00",
-                "Loan ID: 105, Principal: $3000, Interest Rate: 7%, Tenure: 1 years, Total Repayment: $3210.00"
+            result = calculate_total_loan(self.sample_data)
+            self.assertEqual(result, 30500.0)
+            self.test_obj.yakshaAssert("test_total_loan_amount", True, "functional")
+            print("test_total_loan_amount = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_total_loan_amount", False, "exception")
+            print("test_total_loan_amount = Failed")
+
+    
+    def test_least_tenure_customer(self):
+        try:
+            result = find_least_tenure(self.sample_data)
+            self.assertEqual(result[1], "Charlie")
+            self.assertEqual(int(result[4]), 1)
+            self.test_obj.yakshaAssert("test_least_tenure_customer", True, "functional")
+            print("test_least_tenure_customer = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_least_tenure_customer", False, "exception")
+            print("test_least_tenure_customer = Failed")
+
+
+
+import unittest
+import pandas as pd
+from SportsScore import (
+    create_score_dataframe,
+    get_average_score,
+    count_players_above_age
+)
+from test.TestUtils import TestUtils
+
+class TestScoreSystem(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_obj = TestUtils()
+        cls.df = create_score_dataframe()
+
+    def test_get_average_score(self):
+        try:
+            expected_avg = (1200 + 980 + 750 + 1600 + 890) / 5  # 1084.0
+            result = get_average_score(self.df)
+            self.assertAlmostEqual(result, expected_avg, places=2)
+            self.test_obj.yakshaAssert("test_get_average_score", True, "functional")
+            print("test_get_average_score = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_get_average_score", False, "exception")
+            print("test_get_average_score = Failed")
+
+    def test_count_players_above_30(self):
+        try:
+            result = count_players_above_age(self.df, age=30)
+            self.assertEqual(result, 3)  # Kohli, Rohit, Dhoni
+            self.test_obj.yakshaAssert("test_count_players_above_30", True, "functional")
+            print("test_count_players_above_30 = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_count_players_above_30", False, "exception")
+            print("test_count_players_above_30 = Failed")
+
+import unittest
+import pandas as pd
+from recipe import *
+from test.TestUtils import TestUtils
+
+class TestRecipeFileManagement(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_obj = TestUtils()
+        cls.filename = "recipes.txt"
+        cls.expected_df = pd.DataFrame({
+            'Recipe': ['Pasta', 'Salad', 'Pizza', 'Soup', 'Smoothie'],
+            'Calories': [600, 150, 800, 250, 200],
+            'Ingredients': [
+                'Pasta, Tomato Sauce, Cheese',
+                'Lettuce, Tomato, Cucumber',
+                'Dough, Cheese, Sauce',
+                'Broth, Carrot, Onion',
+                'Banana, Milk, Honey'
             ]
+        })
 
-            # Call display_loans() and get the returned list
-            result = display_loans(loan_data)
-
-            # Compare the returned list with the expected output
-            if result == expected_output:
-                self.test_obj.yakshaAssert("TestDisplayLoans", True, "functional")
-                print("TestDisplayLoans = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestDisplayLoans", False, "functional")
-                print("TestDisplayLoans = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestDisplayLoans", False, "exception")
-            print(f"TestDisplayLoans = Failed ")
-
-    def test_find_highest_repayment(self):
-        """
-        Test for find_highest_repayment function
-        """
+    def test_read_recipe_file(self):
         try:
-            # Highest repayment should be Loan ID 104
-            expected_highest = [104, 12000, 3, 4]
-            result = find_highest_repayment(loan_data)
-            if list(result) == expected_highest:
-                self.test_obj.yakshaAssert("TestFindHighestRepayment", True, "functional")
-                print("TestFindHighestRepayment = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestFindHighestRepayment", False, "functional")
-                print("TestFindHighestRepayment = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestFindHighestRepayment", False, "exception")
-            print(f"TestFindHighestRepayment = Failed ")
+            df = read_recipe_file(self.filename)
+            self.assertTrue(isinstance(df, pd.DataFrame))
+            self.assertEqual(df.shape, (5, 3))
+            self.assertIn("Recipe", df.columns)
+            self.test_obj.yakshaAssert("test_read_recipe_file", True, "functional")
+            print("test_read_recipe_file = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_read_recipe_file", False, "exception")
+            print("test_read_recipe_file = Failed")
 
-if __name__ == '__main__':
-    # Create a test suite with all test classes
-    test_suite = unittest.TestSuite()
-    
-    # Add tests from TestRecipeManagement
-    test_suite.addTest(unittest.makeSuite(TestRecipeManagement))
-    
-    # Add tests from TestSportsScorePrediction
-    test_suite.addTest(unittest.makeSuite(TestSportsScorePrediction))
-    
-    # Add tests from TestLoanManagement
-    test_suite.addTest(unittest.makeSuite(TestLoanManagement))
-    
-    # Run the tests
-    test_runner = unittest.TextTestRunner()
-    test_runner.run(test_suite)
+    def test_get_high_calorie_recipes(self):
+        try:
+            df = read_recipe_file(self.filename)
+            high_cal = get_high_calorie_recipes(df, 500)
+            self.assertIn("Pizza", high_cal['Recipe'].values)
+            self.assertIn("Pasta", high_cal['Recipe'].values)
+            self.assertNotIn("Salad", high_cal['Recipe'].values)
+            self.test_obj.yakshaAssert("test_get_high_calorie_recipes", True, "functional")
+            print("test_get_high_calorie_recipes = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_get_high_calorie_recipes", False, "exception")
+            print("test_get_high_calorie_recipes = Failed")
+
+    def test_get_ingredients(self):
+        try:
+            df = read_recipe_file(self.filename)
+            result = get_ingredients(df, "Pizza")
+            self.assertEqual(result, "Dough, Cheese, Sauce")
+            self.test_obj.yakshaAssert("test_get_ingredients", True, "functional")
+            print("test_get_ingredients = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_get_ingredients", False, "exception")
+            print("test_get_ingredients = Failed")
+
+
+if __name__ == "__main__":
+    unittest.main()
