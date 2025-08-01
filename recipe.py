@@ -1,74 +1,51 @@
-# recipe_management.py
-
-import numpy as np
 import pandas as pd
 
-# Preset Recipe Data
-recipes = {
-    "Pasta": {"Flour": 200, "Eggs": 2, "Cheese": 50, "Milk": 100},
-    "Pizza": {"Flour": 250, "Tomato": 100, "Cheese": 150, "Olives": 50},
-    "Salad": {"Lettuce": 100, "Tomato": 150, "Cucumber": 100, "Cheese": 50},
-    "Soup": {"Carrot": 200, "Potato": 150, "Onion": 100, "Garlic": 20},
-    "Cake": {"Flour": 300, "Sugar": 200, "Butter": 150, "Eggs": 3}
-}
-
-# Ingredient Prices (Per unit in grams/ml)
-ingredient_prices = {
-    "Flour": 0.5, "Eggs": 5, "Cheese": 2, "Milk": 1,
-    "Tomato": 1.5, "Olives": 3, "Lettuce": 1.2, "Cucumber": 2,
-    "Carrot": 0.8, "Potato": 0.6, "Onion": 0.9, "Garlic": 4,
-    "Sugar": 1.3, "Butter": 2.5
-}
-
-# Convert recipes to a Pandas DataFrame
-df = pd.DataFrame(recipes).fillna(0)
-
-# Function 1: Calculate total cost of each recipe
-def calculate_total_cost():
+# 1️⃣ TODO: Read recipe data from a text file and return as DataFrame use the recipes.txt
+def read_recipe_file(filename):
     """
-    Calculate the total cost of each recipe.
+    Args:
+        filename (str): Path to recipe file
 
     Returns:
-        dict: A dictionary with recipe names as keys and total costs as values.
+        pd.DataFrame: DataFrame with columns ['Recipe', 'Calories', 'Ingredients']
     """
-    # TODO: Implement total cost calculation logic
+    # TODO: Read the file and construct a DataFrame
     pass
 
-# Function 2: Normalize ingredient quantities using NumPy (Scaling factor: 1.5)
-def normalize_quantities():
+# 2️⃣ TODO: Filter recipes over a calorie threshold
+def get_high_calorie_recipes(df, threshold=500):
     """
-    Normalize the ingredient quantities by a scaling factor of 1.5.
+    Args:
+        df (pd.DataFrame): DataFrame with recipe data
+        threshold (int): Calorie threshold
 
     Returns:
-        pd.DataFrame: A DataFrame with scaled ingredient quantities.
+        pd.DataFrame: Filtered recipes
     """
-    # TODO: Implement normalization logic using NumPy
+    # TODO: Filter rows where Calories > threshold
     pass
 
-# Function 3: Unique ingredients across all recipes
-def unique_ingredients():
+# 3️⃣ TODO: Return ingredients of a given recipe
+def get_ingredients(df, recipe_name):
     """
-    Get the unique ingredients used across all recipes.
+    Args:
+        df (pd.DataFrame): DataFrame with recipe data
+        recipe_name (str): Recipe to look up
 
     Returns:
-        set: A set of unique ingredient names.
+        str: Ingredients or "Recipe not found."
     """
-    # TODO: Implement logic to find unique ingredients
+    # TODO: Return the matching row's ingredients
     pass
 
-# Display results for manual testing (optional)
-if __name__ == '__main__':
-    print("\n--- Recipe Ingredient Data (Original) ---")
+# 🔍 Sample Execution
+if __name__ == "__main__":
+    df = read_recipe_file("recipes.txt")
+    print("All Recipes:")
     print(df)
 
-    print("\n--- Total Cost of Each Recipe ---")
-    # TODO: Call calculate_total_cost() and print results
-    pass
+    print("\nHigh Calorie Recipes (>500):")
+    print(get_high_calorie_recipes(df))
 
-    print("\n--- Scaled Ingredient Quantities (1.5x) ---")
-    # TODO: Call normalize_quantities() and print results
-    pass
-
-    print("\n--- Unique Ingredients Used in All Recipes ---")
-    # TODO: Call unique_ingredients() and print results
-    pass
+    print("\nIngredients for 'Pizza':")
+    print(get_ingredients(df, "Pizza"))
