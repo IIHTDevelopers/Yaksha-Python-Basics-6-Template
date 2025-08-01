@@ -1,0 +1,5 @@
+Pasta,600,Pasta;Tomato Sauce;Cheese
+Salad,150,Lettuce;Tomato;Cucumber
+Pizza,800,Dough;Cheese;Sauce
+Soup,250,Broth;Carrot;Onion
+Smoothie,200,Banana;Milk;Honey
