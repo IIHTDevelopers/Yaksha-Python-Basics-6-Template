@@ -25,7 +25,7 @@ def get_high_calorie_recipes(df, threshold=500):
     # TODO: Filter rows where Calories > threshold
     pass
 
-# 3️⃣ TODO: Return ingredients of a given recipe
+# 3️⃣ TODO: Return ingredients of a given recipe (pizza)
 def get_ingredients(df, recipe_name):
     """
     Args:
@@ -49,3 +49,4 @@ if __name__ == "__main__":
 
     print("\nIngredients for 'Pizza':")
     print(get_ingredients(df, "Pizza"))
+
